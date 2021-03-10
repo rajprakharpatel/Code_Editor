@@ -49,10 +49,16 @@ public class GUIEditor extends JFrame implements ActionListener {
         saveAsItem = new JMenuItem("Save As");
 
 
+
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
         menuBar.add(buildMenu);
+
+        fileMenu.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        editMenu.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        viewMenu.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        buildMenu.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 
         fileMenu.add(openItem);
@@ -64,7 +70,7 @@ public class GUIEditor extends JFrame implements ActionListener {
 
 
 
-        this.add(menuBar);
+        this.setJMenuBar(menuBar);
         this.add(scrollPane);
 
 
