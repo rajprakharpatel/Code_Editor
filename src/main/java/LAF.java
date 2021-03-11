@@ -1,4 +1,5 @@
 //Script for listing installed Look and feels
+
 import javax.swing.UIManager;
 
 public class LAF {
