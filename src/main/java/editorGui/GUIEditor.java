@@ -19,9 +19,10 @@ public class GUIEditor extends JFrame implements ActionListener {
     JMenuItem openItem;
     JMenuItem saveItem;
     JMenuItem saveAsItem;
-    public GUIEditor(){
+
+    public GUIEditor() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500,500);
+        this.setSize(500, 500);
         this.setTitle("Code Editor");
         this.setLocationRelativeTo(null);
         this.setLayout(new FlowLayout());
@@ -32,7 +33,7 @@ public class GUIEditor extends JFrame implements ActionListener {
         textArea.setWrapStyleWord(true);
 // Adding vertical scroll bar
         scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(480,480));
+        scrollPane.setPreferredSize(new Dimension(480, 480));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 // Setting up menu bar
@@ -49,13 +50,10 @@ public class GUIEditor extends JFrame implements ActionListener {
         saveAsItem = new JMenuItem("Save As");
 
 
-
         menuBar.add(fileMenu);
         menuBar.add(editMenu);
         menuBar.add(viewMenu);
         menuBar.add(buildMenu);
-
-
 
 
         fileMenu.add(openItem);
@@ -65,14 +63,11 @@ public class GUIEditor extends JFrame implements ActionListener {
 //
 
 
-
-
         this.setJMenuBar(menuBar);
         this.add(scrollPane);
 
 
         this.setVisible(true);
-
 
 
     }
