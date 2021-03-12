@@ -19,31 +19,26 @@ public class GUIEditor extends JFrame implements ActionListener {
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
 
-// Creating text area
+        // Creating text area
         textArea = new TextArea();
 
-// Adding vertical scroll bar
+        // Adding vertical scroll bar
         scrollPane = new JScrollPane(textArea);
         scrollPane.setPreferredSize(new Dimension(480, 480));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-// Setting up menu bar
+        // Setting up menu bar
         menuBar = new MenuBar();
 
-//
         this.setJMenuBar(menuBar);
         this.add(scrollPane);
 
-
         this.setVisible(true);
-
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
-
 
     }
 }
