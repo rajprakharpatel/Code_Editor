@@ -21,5 +21,5 @@ test {
 }
 
 application{
-    mainClass = 'runner.Editor'
+    mainClass = 'Main'
 }
