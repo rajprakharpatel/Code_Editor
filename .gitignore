@@ -70,6 +70,9 @@ gradle-app.setting
 /.teamcity/target
 /gradle.ipr
 /gradle.iws
+.classpath
+.project
+.settings
 
 # Thread dumps for troubleshooting
 *.threaddump
