@@ -23,9 +23,9 @@ public class GUIEditor extends JFrame implements ActionListener {
             try {
                 UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             } catch (Exception ev) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                System.err.println("Look and feel not set.");
             }
-            System.err.println("Look and feel not set.");
         }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
