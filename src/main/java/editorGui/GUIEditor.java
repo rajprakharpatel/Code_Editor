@@ -48,13 +48,13 @@ public class GUIEditor extends JFrame implements ActionListener {
         scrollPane.setPreferredSize(new Dimension(500, 500));
 
         // Setting up menu bar
-        menuBar = new MenuBar();
+        menuBar = new MenuBar(textPane);
 
         // Setting up tabbed pane
         tabPane = new JTabbedPane();
         tabPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                // TODO: implememnt highlight to call from here
+                // TODO: implement highlight to call from here
                 // textPane.highlight();
             }
         });
@@ -68,6 +68,7 @@ public class GUIEditor extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
 
     }
 }
