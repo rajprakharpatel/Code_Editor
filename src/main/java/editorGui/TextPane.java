@@ -21,7 +21,7 @@ public class TextPane extends JTextPane {
         // this.setBackground(Color.getHSBColor(0, 2, 13));
         // this.setForeground(Color.WHITE);
         // this.setText("Here is example text");
-
+        //setBackground(Color.DARK_GRAY);
         // try {
         // Document doc = this.getStyledDocument();
         // doc.insertString(doc.getLength(), "To Java ", attributeSet);
@@ -29,7 +29,7 @@ public class TextPane extends JTextPane {
         // attributeSet = new SimpleAttributeSet();
         // doc.insertString(doc.getLength(), "World", attributeSet);
         // } catch (BadLocationException e) {
-        // System.out.println("Error ocurred");
+        // System.out.println("Error occurred");
         // }
     }
 

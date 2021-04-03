@@ -18,20 +18,26 @@ public class MenuBar extends JMenuBar implements ActionListener {
         textPane = tp;
         JMenu fileMenu = new JMenu("File");
         JMenu editMenu = new JMenu("Edit");
-        JMenu viewMenu = new JMenu("View");
+
         JMenu buildMenu = new JMenu("Build");
 
         JMenuItem newItem = new JMenuItem("New");
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem saveItem = new JMenuItem("Save");
         JMenuItem saveAsItem = new JMenuItem("Save As");
+        JMenuItem cutItem = new JMenuItem("Cut");
+        JMenuItem copyItem = new JMenuItem("Copy");
+        JMenuItem pasteItem = new JMenuItem("Paste");
+        JMenuItem findItem = new JMenuItem("Find");
+        JMenuItem runItem = new JMenuItem("Run");
+        JMenuItem stopItem = new JMenuItem("Stop");
+
 
         saveAsItem.addActionListener(this);
 
 
         this.add(fileMenu);
         this.add(editMenu);
-        this.add(viewMenu);
         this.add(buildMenu);
 
 
@@ -39,6 +45,16 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(newItem);
         fileMenu.add(saveItem);
         fileMenu.add(saveAsItem);
+
+        editMenu.add(cutItem);
+        editMenu.add(copyItem);
+        editMenu.add(pasteItem);
+        editMenu.add(findItem);
+
+        buildMenu.add(runItem);
+        buildMenu.add(stopItem);
+
+
     }
 
     @Override
@@ -52,15 +68,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
             if (Response == JFileChooser.APPROVE_OPTION) {
                 File file;
-                PrintWriter fileOut = null;
                 file = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                try {
-                    fileOut = new PrintWriter(file);
+                try (PrintWriter fileOut = new PrintWriter(file)) {
                     fileOut.println(textPane.getText());
                 } catch (FileNotFoundException fileNotFoundException) {
                     fileNotFoundException.printStackTrace();
-                } finally {
-                    fileOut.close();
                 }
 
 
