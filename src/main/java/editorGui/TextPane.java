@@ -1,36 +1,60 @@
 package editorGui;
 
-import java.awt.Color;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 
-@SuppressWarnings("serial")
+import jsitter.api.*;
+
 public class TextPane extends JTextPane {
+
     public TextPane() {
-        // Place holder text
-        // SimpleAttributeSet attributeSet = new SimpleAttributeSet();
-        // StyleConstants.setBold(attributeSet, true);
-        // this.setCharacterAttributes(attributeSet, true);
-        // this.setText("Welcome");
-        // attributeSet = new SimpleAttributeSet();
-        // StyleConstants.setItalic(attributeSet, true);
-        // StyleConstants.setForeground(attributeSet, Color.red);
-        // this.setBackground(Color.getHSBColor(0, 2, 13));
-        // this.setForeground(Color.WHITE);
-        // this.setText("Here is example text");
-        //setBackground(Color.DARK_GRAY);
-        // try {
-        // Document doc = this.getStyledDocument();
-        // doc.insertString(doc.getLength(), "To Java ", attributeSet);
-        //
-        // attributeSet = new SimpleAttributeSet();
-        // doc.insertString(doc.getLength(), "World", attributeSet);
-        // } catch (BadLocationException e) {
-        // System.out.println("Error occurred");
-        // }
+        System.out.println("Starting Traversing...");
+        this.setText("Starting Traversing...");
+        try {
+            visiting();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    private static String readFile(String filePath) {
+        String content = "";
+
+        try {
+            content = new String(Files.readAllBytes(Paths.get(filePath)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return content;
+    }
+
+    NodeType sourceFile = new NodeType("source_file");
+
+    public Language<NodeType> javaLang() throws ClassNotFoundException {
+        Language<NodeType> lang = Language.load(sourceFile, "go", "tree_sitter_go", "tsgo.dll",
+                Class.forName("jsitter.api.Language").getClassLoader());
+        lang.register(sourceFile);
+        System.out.println("Returning lang");
+        return lang;
+    }
+
+
+    public void visiting() throws ClassNotFoundException {
+        Language<NodeType> lang = javaLang();
+        Parser<NodeType> parser = lang.parser();
+        Tree<NodeType> tree = parser.parse(new StringText(readFile("test.go")), null);
+        Zipper<?> zipper = tree.getRoot().zipper();
+        StringBuilder sourceCode = new StringBuilder();
+        while (zipper != null) {
+            String NodeTypeStr = "NodeTypeStr: " + zipper.getNode().getType();
+            String byteSize = "";
+            byteSize = "AliasStr: " + zipper.getByteSize() + "\n";
+            sourceCode.append(NodeTypeStr).append("::").append(byteSize).append("\n");
+            zipper = zipper.next();
+        }
+        this.setText(sourceCode.toString());
+    }
 }
