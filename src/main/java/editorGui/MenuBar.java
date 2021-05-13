@@ -5,13 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar implements ActionListener {
 
     private final TextPane textPane;
-
+    public String extention;
+    public String path;
+    public String name;
 
     public MenuBar(TextPane tp) {
 
@@ -25,6 +29,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem saveItem = new JMenuItem("Save");
         JMenuItem saveAsItem = new JMenuItem("Save As");
+        JMenuItem exitItem = new JMenuItem("Exit");
         JMenuItem cutItem = new JMenuItem("Cut");
         JMenuItem copyItem = new JMenuItem("Copy");
         JMenuItem pasteItem = new JMenuItem("Paste");
@@ -34,6 +39,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
 
         saveAsItem.addActionListener(this);
+        runItem.addActionListener(this);
+        exitItem.addActionListener(this);
+        openItem.addActionListener(this);
 
 
         this.add(fileMenu);
@@ -45,6 +53,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(newItem);
         fileMenu.add(saveItem);
         fileMenu.add(saveAsItem);
+        fileMenu.add(exitItem);
 
         editMenu.add(cutItem);
         editMenu.add(copyItem);
@@ -57,9 +66,32 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
     }
 
+    public void compAndRun(String path) {
+        int index = name.lastIndexOf('.');
+        if (index > 0) {
+            extention = name.substring(index + 1);
+        }
+        System.out.println("Program is being executed");
+        System.out.println(extention);
+        if (extention.equals("cpp")) {
+            try {
+                Runtime.getRuntime().exec("cd " + "C:\\Users\\Sandilya\\Desktop\\");
+                Runtime.getRuntime().exec("g++ " + name);
+                Runtime.getRuntime().exec("a.exe");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+
+
+        }
+
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
+        String d = e.getActionCommand();
         if (s.equals("Save As")) {
 
             JFileChooser fileChooser = new JFileChooser();
@@ -69,6 +101,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
             if (Response == JFileChooser.APPROVE_OPTION) {
                 File file;
                 file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                path = file.getAbsolutePath();
+                System.out.println(path);
+                name = file.getName();
+                System.out.println(name);
                 try (PrintWriter fileOut = new PrintWriter(file)) {
                     fileOut.println(textPane.getText());
                 } catch (FileNotFoundException fileNotFoundException) {
@@ -76,6 +112,39 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 }
 
 
+            }
+
+        }
+
+        if (d.equals("Exit")) {
+            System.exit(0);
+        }
+        if (d.equals("Open")) {
+            System.out.println("Open button called");
+            textPane.setText("");
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File("."));
+            int response = fileChooser.showOpenDialog(null);
+
+            if (response == JFileChooser.APPROVE_OPTION) {
+                File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                path = file.getAbsolutePath();
+                System.out.println(path);
+
+                Scanner fileIn;
+
+                try {
+                    fileIn = new Scanner(file);
+                    if (file.isFile()) {
+                        while (fileIn.hasNextLine()) {
+                            String line = fileIn.nextLine() + "\n";
+                            textPane.append(line);
+                        }
+                    }
+
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
 
             }
 

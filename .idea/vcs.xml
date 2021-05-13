@@ -3,5 +3,9 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libs/jsitter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/jsitter/native/grammars/tree-sitter-go" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/jsitter/native/grammars/tree-sitter-json" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/jsitter/native/tree-sitter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/jsitter/native/tree-sitter/lib/utf8proc" vcs="Git" />
   </component>
 </project>
