@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class MenuBar extends JMenuBar implements ActionListener {
 
     private final TextPane textPane;
-    public String extention;
+    public String extension;
     public String path;
     public String name;
 
@@ -28,7 +28,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenuItem newItem = new JMenuItem("New");
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem saveItem = new JMenuItem("Save");
-        JMenuItem saveAsItem = new JMenuItem("Save As");
+
         JMenuItem exitItem = new JMenuItem("Exit");
         JMenuItem cutItem = new JMenuItem("Cut");
         JMenuItem copyItem = new JMenuItem("Copy");
@@ -38,7 +38,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenuItem stopItem = new JMenuItem("Stop");
 
 
-        saveAsItem.addActionListener(this);
+        saveItem.addActionListener(this);
         runItem.addActionListener(this);
         exitItem.addActionListener(this);
         openItem.addActionListener(this);
@@ -52,7 +52,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(openItem);
         fileMenu.add(newItem);
         fileMenu.add(saveItem);
-        fileMenu.add(saveAsItem);
+
         fileMenu.add(exitItem);
 
         editMenu.add(cutItem);
@@ -66,24 +66,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
     }
 
-    public void compAndRun(String path) {
-        int index = name.lastIndexOf('.');
-        if (index > 0) {
-            extention = name.substring(index + 1);
-        }
-        System.out.println("Program is being executed");
-        System.out.println(extention);
-        if (extention.equals("cpp")) {
-            try {
-                Runtime.getRuntime().exec("cd " + "C:\\Users\\Sandilya\\Desktop\\");
-                Runtime.getRuntime().exec("g++ " + name);
-                Runtime.getRuntime().exec("a.exe");
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-
-
-        }
+    public void compAndRun(String path, String name) {
 
 
     }
@@ -92,7 +75,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         String d = e.getActionCommand();
-        if (s.equals("Save As")) {
+        if (s.equals("Save")) {
 
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -115,6 +98,46 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
 
         }
+        if (d.equals("Run")) {
+            System.out.println("Run button called");
+
+            String arPath;
+
+            arPath = path.replaceAll("\\\\", "/");
+
+
+            System.out.println(arPath);
+            int indexPath = arPath.lastIndexOf('/');
+            if (indexPath > 0) {
+                arPath = arPath.substring(0, indexPath);
+
+            }
+            System.out.println(arPath);
+            System.out.println(name);
+            int index = name.lastIndexOf('.');
+
+            if (index > 0) {
+                extension = name.substring(index + 1);
+            }
+            System.out.println(extension);
+            System.out.println("Program is being executed");
+
+            if (extension.equals("cpp")) {
+                try {
+                    System.out.println("g++ " + arPath + "/" + name + " -o " + arPath + name.substring(0, index));
+                    Runtime.getRuntime().exec("g++ " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
+                    Thread.sleep(5000);
+                    System.out.println("Compiled");
+                    Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                } catch (IOException | InterruptedException ioException) {
+                    ioException.printStackTrace();
+                }
+
+
+            } else if (extension.equals("java")) {
+
+            }
+        }
 
         if (d.equals("Exit")) {
             System.exit(0);
@@ -130,7 +153,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 path = file.getAbsolutePath();
                 System.out.println(path);
-
+                name = file.getName();
                 Scanner fileIn;
 
                 try {
