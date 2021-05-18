@@ -16,9 +16,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
     public String extension;
     public String path;
     public String name;
+    private String OSName;
 
-    public MenuBar(TextPane tp) {
+    public MenuBar(TextPane tp, String osName) {
 
+        OSName = osName;
         textPane = tp;
         JMenu fileMenu = new JMenu("File");
         JMenu editMenu = new JMenu("Edit");
@@ -42,6 +44,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         runItem.addActionListener(this);
         exitItem.addActionListener(this);
         openItem.addActionListener(this);
+        stopItem.addActionListener(this);
 
 
         this.add(fileMenu);
@@ -126,9 +129,13 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 try {
                     System.out.println("g++ " + arPath + "/" + name + " -o " + arPath + name.substring(0, index));
                     Runtime.getRuntime().exec("g++ " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                     System.out.println("Compiled");
-                    Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                    if (OSName.equals("Linux")) {
+                        Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
+                    }else {
+                        Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                    }
                 } catch (IOException | InterruptedException ioException) {
                     ioException.printStackTrace();
                 }
@@ -137,6 +144,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             } else if (extension.equals("java")) {
 
             }
+        }
+        if (d.equals("Stop")) {
         }
 
         if (d.equals("Exit")) {

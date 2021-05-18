@@ -3,8 +3,9 @@
 using namespace std;
 
 int main(){
-  cout<<"Hello world";
-  int x;
-  cin>>x;
-
+  int x, y;
+  cout<<"Hello world\n";
+  cin>>x >> y;
+  cout << x+y;
 }
+

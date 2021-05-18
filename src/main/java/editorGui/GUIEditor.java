@@ -16,7 +16,8 @@ public class GUIEditor extends JFrame implements ActionListener {
 
     MenuBar menuBar;
 
-    public GUIEditor() {
+    public GUIEditor(String OSName) {
+        System.out.println(OSName);
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
         } catch (Exception e) {
@@ -48,7 +49,7 @@ public class GUIEditor extends JFrame implements ActionListener {
         scrollPane.setPreferredSize(new Dimension(500, 500));
 
         // Setting up menu bar
-        menuBar = new MenuBar(textPane);
+        menuBar = new MenuBar(textPane, OSName);
 
         // Setting up tabbed pane
         tabPane = new JTabbedPane();
