@@ -108,6 +108,13 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
             arPath = path.replaceAll("\\\\", "/");
 
+            String arjPath;
+
+            int ij = arPath.lastIndexOf("/");
+
+
+            arjPath = arPath.substring(0, ij);
+
 
             System.out.println(arPath);
             int indexPath = arPath.lastIndexOf('/');
@@ -133,7 +140,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     System.out.println("Compiled");
                     if (OSName.equals("Linux")) {
                         Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
-                    }else {
+                    } else {
                         Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
                     }
                 } catch (IOException | InterruptedException ioException) {
@@ -142,6 +149,34 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
 
             } else if (extension.equals("java")) {
+                try {
+                    Runtime.getRuntime().exec("cmd /c start script.bat " + arjPath + " " + name.substring(0, index));
+                    //Runtime.getRuntime().exec("javac "+ arPath + "/" + name);
+                    //Thread.sleep(5000);
+                    System.out.println("Compiled");
+                    //System.out.println("cmd /c start cmd.exe /K cd " + arPath);
+                    //System.out.println("cmd /c start cmd.exe /K cd " + arPath+" && "+"java "+name.substring(0,index));
+                    //Runtime.getRuntime().exec("cmd /c start cmd.exe /K cd " + arPath+" && "+"java "+name.substring(0,index));
+                    //System.out.println("cmd /c start cmd.exe /K java "+name.substring(0,index));
+                    //System.out.println(name.substring(0,index));
+                    //Runtime.getRuntime().exec("cmd /c start cmd.exe /K java "+name.substring(0,index));
+
+
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
+            } else if (extension.equals("py")) {
+                System.out.println("Python file");
+                if (OSName.equals("Linux")) {
+
+                } else {
+                    try {
+                        Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + arPath + "/" + name.substring(0, index) + ".py");
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
 
             }
         }
