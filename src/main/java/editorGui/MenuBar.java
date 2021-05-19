@@ -38,8 +38,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenuItem findItem = new JMenuItem("Find");
         JMenuItem runItem = new JMenuItem("Run");
         JMenuItem stopItem = new JMenuItem("Stop");
+        JMenuItem saveAsItem = new JMenuItem("Save as");
 
-
+        saveAsItem.addActionListener(this);
         saveItem.addActionListener(this);
         runItem.addActionListener(this);
         exitItem.addActionListener(this);
@@ -55,13 +56,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(openItem);
         fileMenu.add(newItem);
         fileMenu.add(saveItem);
-
+        fileMenu.add(saveAsItem);
         fileMenu.add(exitItem);
 
         editMenu.add(cutItem);
         editMenu.add(copyItem);
         editMenu.add(pasteItem);
         editMenu.add(findItem);
+
 
         buildMenu.add(runItem);
         buildMenu.add(stopItem);
@@ -78,7 +80,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         String d = e.getActionCommand();
-        if (s.equals("Save")) {
+        if (s.equals("Save as")) {
 
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -132,51 +134,66 @@ public class MenuBar extends JMenuBar implements ActionListener {
             System.out.println(extension);
             System.out.println("Program is being executed");
 
-            if (extension.equals("cpp")) {
-                try {
-                    System.out.println("g++ " + arPath + "/" + name + " -o " + arPath + name.substring(0, index));
-                    Runtime.getRuntime().exec("g++ " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
-                    Thread.sleep(2000);
-                    System.out.println("Compiled");
-                    if (OSName.equals("Linux")) {
-                        Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
-                    } else {
-                        Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
-                    }
-                } catch (IOException | InterruptedException ioException) {
-                    ioException.printStackTrace();
-                }
-
-
-            } else if (extension.equals("java")) {
-                try {
-                    
-                    if (OSName.equals("Linux")) {
-                        Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + arjPath + " " + name.substring(0, index) + " 5");
-                    } else{
-                        Runtime.getRuntime().exec("cmd /c start script.bat " + arjPath + " " + name.substring(0, index));
+            switch (extension) {
+                case "cpp":
+                    try {
+                        System.out.println("g++ " + arPath + "/" + name + " -o " + arPath + name.substring(0, index));
+                        Runtime.getRuntime().exec("g++ " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
+                        Thread.sleep(2000);
                         System.out.println("Compiled");
+                        if (OSName.equals("Linux")) {
+                            Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
+                        } else {
+                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                        }
+                    } catch (IOException | InterruptedException ioException) {
+                        ioException.printStackTrace();
                     }
+
+
+                    break;
+                case "java":
+                    try {
+
+                        if (OSName.equals("Linux")) {
+                            Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + arjPath + " " + name.substring(0, index) + " 5");
+                        } else {
+                            Runtime.getRuntime().exec("cmd /c start script.bat " + arjPath + " " + name.substring(0, index));
+                            System.out.println("Compiled");
+                        }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
-                }
+                    }
 
-            } else if (extension.equals("py")) {
-                System.out.println("Python file");
-                try{
-                    if (OSName.equals("Linux")) {
-                        Runtime.getRuntime().exec("alacritty --hold -e python " + arPath + "/" + name);
-                    } else {
-                        Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + arPath + "/" + name);
-                }
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+                    break;
+                case "py":
+                    System.out.println("Python file");
+                    try {
+                        if (OSName.equals("Linux")) {
+                            Runtime.getRuntime().exec("alacritty --hold -e python " + arPath + "/" + name);
+                        } else {
+                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + arPath + "/" + name);
+                        }
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
 
+                    break;
             }
         }
-        if (d.equals("Stop")) {
+        if(d.equals("Save")){
+            System.out.println("Save called");
+            File file = new File(path);
+            try(PrintWriter fileOut = new PrintWriter(file)) {
+                fileOut.println(textPane.getText());
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+
+
         }
+
 
         if (d.equals("Exit")) {
             System.exit(0);
@@ -211,6 +228,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
 
         }
+
     }
 }
 
