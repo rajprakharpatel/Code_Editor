@@ -150,32 +150,27 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
             } else if (extension.equals("java")) {
                 try {
-                    Runtime.getRuntime().exec("cmd /c start script.bat " + arjPath + " " + name.substring(0, index));
-                    //Runtime.getRuntime().exec("javac "+ arPath + "/" + name);
-                    //Thread.sleep(5000);
-                    System.out.println("Compiled");
-                    //System.out.println("cmd /c start cmd.exe /K cd " + arPath);
-                    //System.out.println("cmd /c start cmd.exe /K cd " + arPath+" && "+"java "+name.substring(0,index));
-                    //Runtime.getRuntime().exec("cmd /c start cmd.exe /K cd " + arPath+" && "+"java "+name.substring(0,index));
-                    //System.out.println("cmd /c start cmd.exe /K java "+name.substring(0,index));
-                    //System.out.println(name.substring(0,index));
-                    //Runtime.getRuntime().exec("cmd /c start cmd.exe /K java "+name.substring(0,index));
-
-
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                    
+                    if (OSName.equals("Linux")) {
+                        Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + arjPath + " " + name.substring(0, index) + " 5");
+                    } else{
+                        Runtime.getRuntime().exec("cmd /c start script.bat " + arjPath + " " + name.substring(0, index));
+                        System.out.println("Compiled");
+                    }
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
                 }
 
             } else if (extension.equals("py")) {
                 System.out.println("Python file");
-                if (OSName.equals("Linux")) {
-
-                } else {
-                    try {
-                        Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + arPath + "/" + name.substring(0, index) + ".py");
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
+                try{
+                    if (OSName.equals("Linux")) {
+                        Runtime.getRuntime().exec("alacritty --hold -e python " + arPath + "/" + name);
+                    } else {
+                        Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + arPath + "/" + name);
+                }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
 
             }
