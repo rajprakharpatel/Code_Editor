@@ -135,6 +135,19 @@ public class MenuBar extends JMenuBar implements ActionListener {
             System.out.println("Program is being executed");
 
             switch (extension) {
+                    case "c":
+                    try {
+                        Runtime.getRuntime().exec("gcc " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
+                        Thread.sleep(2000);
+                        if (OSName.equals("Linux")) {
+                            Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
+                        } else {
+                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                        }
+                    } catch(IOException | InterruptedException ioException){
+                        ioException.printStackTrace();
+                    }
+                    break;
                 case "cpp":
                     try {
                         System.out.println("g++ " + arPath + "/" + name + " -o " + arPath + name.substring(0, index));
@@ -149,8 +162,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     } catch (IOException | InterruptedException ioException) {
                         ioException.printStackTrace();
                     }
-
-
                     break;
                 case "java":
                     try {
@@ -158,7 +169,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                         if (OSName.equals("Linux")) {
                             Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + arjPath + " " + name.substring(0, index) + " 5");
                         } else {
-                            Runtime.getRuntime().exec("cmd /c start script.bat " + arjPath + " " + name.substring(0, index));
+                            Runtime.getRuntime().exec("cmd /c start ./src/main/resources/script.bat " + arjPath + " " + name.substring(0, index));
                             System.out.println("Compiled");
                         }
                     } catch (IOException ioException) {
