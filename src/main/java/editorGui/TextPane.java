@@ -14,7 +14,7 @@ public class TextPane extends JTextArea {
         this.setForeground(Color.WHITE);
 
 
-        this.setSelectedTextColor(Color.cyan);
+        this.setSelectedTextColor(Color.BLUE);
 
 
     }

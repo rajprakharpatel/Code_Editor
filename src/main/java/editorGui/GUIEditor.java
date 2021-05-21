@@ -16,6 +16,7 @@ public class GUIEditor extends JFrame implements ActionListener {
 
     MenuBar menuBar;
 
+
     public GUIEditor(String OSName) {
         // System.out.println(OSName);
         try {
@@ -52,6 +53,7 @@ public class GUIEditor extends JFrame implements ActionListener {
 
         // Setting up menu bar
         menuBar = new MenuBar(textPane, OSName);
+
 
         // Setting up tabbed pane
         tabPane = new JTabbedPane();
