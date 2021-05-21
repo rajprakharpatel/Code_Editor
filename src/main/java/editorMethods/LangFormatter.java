@@ -44,7 +44,15 @@ public class LangFormatter {
         }
     }
     public void googleJavaFormat(String fileName){
-        
+        try {
+            if (OSName.equals("Linux")) {
+                final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
+            } else {
+                final Process p = Runtime.getRuntime().exec("cmd /c java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
     public void yapfFormat(String fileName){}
 }
