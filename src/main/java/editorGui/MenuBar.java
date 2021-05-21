@@ -1,5 +1,7 @@
 package editorGui;
 
+import editorMethods.LangFormatter;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +18,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     public String extension;
     public String path;
     public String name;
+    public String progDir;
     private String OSName;
 
     public MenuBar(TextPane tp, String osName) {
@@ -24,21 +27,20 @@ public class MenuBar extends JMenuBar implements ActionListener {
         textPane = tp;
         JMenu fileMenu = new JMenu("File");
         JMenu editMenu = new JMenu("Edit");
-
         JMenu buildMenu = new JMenu("Build");
 
         JMenuItem newItem = new JMenuItem("New");
         JMenuItem openItem = new JMenuItem("Open");
         JMenuItem saveItem = new JMenuItem("Save");
-
+        JMenuItem saveAsItem = new JMenuItem("Save as");
         JMenuItem exitItem = new JMenuItem("Exit");
+
         JMenuItem cutItem = new JMenuItem("Cut");
         JMenuItem copyItem = new JMenuItem("Copy");
         JMenuItem pasteItem = new JMenuItem("Paste");
         JMenuItem findItem = new JMenuItem("Find");
         JMenuItem runItem = new JMenuItem("Run");
         JMenuItem stopItem = new JMenuItem("Stop");
-        JMenuItem saveAsItem = new JMenuItem("Save as");
 
         saveAsItem.addActionListener(this);
         saveItem.addActionListener(this);
@@ -67,8 +69,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
         buildMenu.add(runItem);
         buildMenu.add(stopItem);
-
-
     }
 
     public void compAndRun(String path, String name) {
@@ -78,9 +78,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String s = e.getActionCommand();
         String d = e.getActionCommand();
-        if (s.equals("Save as")) {
+        if (d.equals("Save as")) {
 
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -90,7 +89,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 File file;
                 file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                 path = file.getAbsolutePath();
-                System.out.println(path);
+                // System.out.println(path);
                 name = file.getName();
                 System.out.println(name);
                 try (PrintWriter fileOut = new PrintWriter(file)) {
@@ -98,51 +97,28 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 } catch (FileNotFoundException fileNotFoundException) {
                     fileNotFoundException.printStackTrace();
                 }
-
-
             }
-
         }
         if (d.equals("Run")) {
-            System.out.println("Run button called");
+            progDir = path.replaceAll("\\\\", "/");
 
-            String arPath;
-
-            arPath = path.replaceAll("\\\\", "/");
-
-            String arjPath;
-
-            int ij = arPath.lastIndexOf("/");
+            int ij = progDir.lastIndexOf("/");
+            progDir = progDir.substring(0, ij);
 
 
-            arjPath = arPath.substring(0, ij);
-
-
-            System.out.println(arPath);
-            int indexPath = arPath.lastIndexOf('/');
-            if (indexPath > 0) {
-                arPath = arPath.substring(0, indexPath);
-
-            }
-            System.out.println(arPath);
-            System.out.println(name);
             int index = name.lastIndexOf('.');
-
             if (index > 0) {
                 extension = name.substring(index + 1);
             }
-            System.out.println(extension);
-            System.out.println("Program is being executed");
-
             switch (extension) {
                     case "c":
                     try {
-                        Runtime.getRuntime().exec("gcc " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
+                        Runtime.getRuntime().exec("gcc " + progDir + "/" + name + " -o " + progDir + "/" + name.substring(0, index));
                         Thread.sleep(2000);
                         if (OSName.equals("Linux")) {
-                            Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
+                            Runtime.getRuntime().exec("alacritty --hold -e " + progDir + "/" + name.substring(0, index));
                         } else {
-                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + progDir + "/" + name.substring(0, index) + ".exe");
                         }
                     } catch(IOException | InterruptedException ioException){
                         ioException.printStackTrace();
@@ -150,14 +126,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     break;
                 case "cpp":
                     try {
-                        System.out.println("g++ " + arPath + "/" + name + " -o " + arPath + name.substring(0, index));
-                        Runtime.getRuntime().exec("g++ " + arPath + "/" + name + " -o " + arPath + "/" + name.substring(0, index));
+                        // System.out.println("g++ " + progDir + "/" + name + " -o " + progDir + name.substring(0, index));
+                        Runtime.getRuntime().exec("g++ " + progDir + "/" + name + " -o " + progDir + "/" + name.substring(0, index));
                         Thread.sleep(2000);
                         System.out.println("Compiled");
                         if (OSName.equals("Linux")) {
-                            Runtime.getRuntime().exec("alacritty --hold -e " + arPath + "/" + name.substring(0, index));
+                            Runtime.getRuntime().exec("alacritty --hold -e " + progDir + "/" + name.substring(0, index));
                         } else {
-                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + arPath + "/" + name.substring(0, index) + ".exe");
+                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K " + progDir + "/" + name.substring(0, index) + ".exe");
                         }
                     } catch (IOException | InterruptedException ioException) {
                         ioException.printStackTrace();
@@ -167,9 +143,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     try {
 
                         if (OSName.equals("Linux")) {
-                            Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + arjPath + " " + name.substring(0, index) + " 5");
+                            Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + progDir + " " + name.substring(0, index) + " 5");
                         } else {
-                            Runtime.getRuntime().exec("cmd /c start ./src/main/resources/script.bat " + arjPath + " " + name.substring(0, index));
+                            Runtime.getRuntime().exec("cmd /c start ./src/main/resources/script.bat " + progDir + " " + name.substring(0, index));
                             System.out.println("Compiled");
                         }
                     } catch (IOException ioException) {
@@ -178,12 +154,12 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
                     break;
                 case "py":
-                    System.out.println("Python file");
+                    // System.out.println("Python file");
                     try {
                         if (OSName.equals("Linux")) {
-                            Runtime.getRuntime().exec("alacritty --hold -e python " + arPath + "/" + name);
+                            Runtime.getRuntime().exec("alacritty --hold -e python " + progDir + "/" + name);
                         } else {
-                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + arPath + "/" + name);
+                            Runtime.getRuntime().exec("cmd /c start cmd.exe /K python " + progDir + "/" + name);
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
@@ -193,7 +169,17 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         }
         if(d.equals("Save")){
-            System.out.println("Save called");
+            progDir = path.replaceAll("\\\\", "/");
+
+            int ij = progDir.lastIndexOf("/");
+            progDir = progDir.substring(0, ij);
+
+
+            int index = name.lastIndexOf('.');
+            if (index > 0) {
+                extension = name.substring(index + 1);
+            }
+            // System.out.println("Save called");
             File file = new File(path);
             try(PrintWriter fileOut = new PrintWriter(file)) {
                 fileOut.println(textPane.getText());
@@ -201,7 +187,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
-
+            LangFormatter langFormatter = new LangFormatter(extension, OSName);
+            langFormatter.format(path);
 
         }
 
@@ -210,7 +197,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             System.exit(0);
         }
         if (d.equals("Open")) {
-            System.out.println("Open button called");
+
+            // System.out.println("Open button called");
             textPane.setText("");
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File("."));
@@ -238,6 +226,16 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
             }
 
+            progDir = path.replaceAll("\\\\", "/");
+
+            int ij = progDir.lastIndexOf("/");
+            progDir = progDir.substring(0, ij);
+
+
+            int index = name.lastIndexOf('.');
+            if (index > 0) {
+                extension = name.substring(index + 1);
+            }
         }
 
     }

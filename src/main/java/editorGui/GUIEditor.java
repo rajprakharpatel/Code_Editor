@@ -17,7 +17,7 @@ public class GUIEditor extends JFrame implements ActionListener {
     MenuBar menuBar;
 
     public GUIEditor(String OSName) {
-        System.out.println(OSName);
+        // System.out.println(OSName);
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
         } catch (Exception e) {
@@ -31,7 +31,9 @@ public class GUIEditor extends JFrame implements ActionListener {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Code Editor");
-        this.getContentPane().setBackground(Color.DARK_GRAY);
+        if (!OSName.equals("Linux")) {
+            this.getContentPane().setBackground(Color.DARK_GRAY);
+        }
         this.setSize(500, 500);
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
