@@ -227,15 +227,16 @@ public class MenuBar extends JMenuBar implements ActionListener {
             progDir = progDir.substring(0, ij);
             if (OSName.equals("Linux")) {
                 try {
-                    Runtime.getRuntime().exec("alacritty -e bash cd " + progDir);
+                    Runtime.getRuntime().exec("alacritty --working-directory " + progDir);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
-            }
-            try {
-                Runtime.getRuntime().exec("cmd /c start cmd.exe /K cd " + progDir);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            } else {
+                try {
+                    Runtime.getRuntime().exec("cmd /c start cmd.exe /K cd " + progDir);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         }
 
