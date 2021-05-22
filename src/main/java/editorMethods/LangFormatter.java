@@ -5,10 +5,13 @@ import java.io.*;
 public class LangFormatter {
     private final String fileType;
     private final String OSName;
+    private final String path;
 
-    public LangFormatter(String ft, String Osn) {
+    public LangFormatter(String ft, String Osn, String path) {
         fileType = ft;
         OSName = Osn;
+        this.path = path;
+
     }
 
     public void format(String fileName) {
@@ -20,7 +23,7 @@ public class LangFormatter {
                 clangFormat(fileName);
                 break;
             case "java":
-                googleJavaFormat(fileName);
+                //googleJavaFormat(fileName);
                 break;
             case "py":
                 yapfFormat(fileName);
@@ -35,24 +38,26 @@ public class LangFormatter {
             if (OSName.equals("Linux")) {
                 final Process p = Runtime.getRuntime().exec("./libs/clang-format-10_linux-amd64 -i " + fileName);
             } else {
-                final Process p = Runtime.getRuntime().exec("./libs/clang-format-10_windows-amd64.exe -i " + fileName);
+                System.out.println("./libs/clang-format-10_windows-amd64.exe -i " + path);
+                Runtime.getRuntime().exec("./libs/clang-format-10_windows-amd64.exe -i " + path);
+                System.out.println("reached");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void googleJavaFormat(String fileName) {
-        try {
-            if (OSName.equals("Linux")) {
-                final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
-            } else {
-                final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+   public void googleJavaFormat(String fileName) {
+       try {
+           if (OSName.equals("Linux")) {
+               final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
+           } else {
+               final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
+           }
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+   }
 
     public void yapfFormat(String fileName) {
         // System.out.println("yapfFormat");

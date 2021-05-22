@@ -12,6 +12,8 @@ public class TextPane extends JTextArea {
         this.setWrapStyleWord(true);
         this.setBackground(Color.DARK_GRAY);
         this.setForeground(Color.WHITE);
+        this.setFont(new Font(this.getFont().getFamily(), Font.PLAIN,24));
+        this.setCaretColor(Color.WHITE);
 
 
         this.setSelectedTextColor(Color.BLUE);
