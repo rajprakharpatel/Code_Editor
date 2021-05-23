@@ -48,10 +48,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenuItem runItem = new JMenuItem("Run");
         JMenuItem newTerminal = new JMenuItem("New Terminal");
         JMenuItem reload = new JMenuItem("Reload");
-
-
+        JMenuItem preview = new JMenuItem("Preview");
         JMenuItem reformat = new JMenuItem("Reformat");
-
 
         JSpinner fontSize = new JSpinner();
         fontSize.setPreferredSize(new Dimension(0, 25));
@@ -74,6 +72,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         reload.addActionListener(this);
         copyItem.addActionListener(this);
         cutItem.addActionListener(this);
+        preview.addActionListener(this);
 
 
         this.add(fileMenu);
@@ -87,6 +86,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(saveItem);
         fileMenu.add(saveAsItem);
         fileMenu.add(reload);
+        fileMenu.add(preview);
         fileMenu.add(exitItem);
 
 
@@ -130,9 +130,16 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         }
         if (d.equals("Run")) {
-            getProjDir();
-            int index;
-            index = name.lastIndexOf('.');
+//            progDir = path.replaceAll("\\\\", "/");
+//
+//            int ij = progDir.lastIndexOf("/");
+//            progDir = progDir.substring(0, ij);
+//
+//
+//            if (index > 0) {
+//                extension = name.substring(index + 1);
+//            }
+            int index = name.lastIndexOf('.');
             switch (extension) {
                 case "c":
                     try {
@@ -192,35 +199,22 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         }
         if (d.equals("Reformat")){
-            getProjDir();
-            // System.out.println("Save called");
-            File file = new File(path);
-            try (PrintWriter fileOut = new PrintWriter(file)) {
-                fileOut.println(textPane.getText());
-
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            }
-            LangFormatter langFormatter = new LangFormatter(extension, OSName, path);
-            langFormatter.format(path);
-            textPane.setText("");
-            File file2 = new File(path);
-            Scanner fileIn ;
-            try{
-                fileIn = new Scanner(file2);
-                while (fileIn.hasNextLine()) {
-                    String line = fileIn.nextLine() + "\n";
-                    textPane.append(line);
-                }
-            } catch (FileNotFoundException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            }
-
+//            File file = new File(path);
+//            try (PrintWriter fileOut = new PrintWriter(file)) {
+//                fileOut.println(textPane.getText());
+//
+//            } catch (FileNotFoundException fileNotFoundException) {
+//                fileNotFoundException.printStackTrace();
+//            }
+//            LangFormatter langFormatter = new LangFormatter(extension, OSName);
+//            langFormatter.format(path);
+//            System.out.println("after formatting");
+//
+//            textPane.setText("");
+//            open(file);
 
         }
         if (d.equals("Save")) {
-            getProjDir();
-            // System.out.println("Save called");
             File file = new File(path);
             try (PrintWriter fileOut = new PrintWriter(file)) {
                 fileOut.println(textPane.getText());
@@ -228,12 +222,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
             } catch (FileNotFoundException fileNotFoundException) {
                 fileNotFoundException.printStackTrace();
             }
-            LangFormatter langFormatter = new LangFormatter(extension, OSName, path);
-            langFormatter.format(path);
 
+            LangFormatter langFormatter = new LangFormatter(extension, OSName);
+            langFormatter.format(path);
         }
         if (d.equals("Reload")){
-            getProjDir();
             File file = new File(path);
             textPane.setText("");
             Scanner fileIn;
@@ -287,6 +280,21 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         }
 
+        if (d.equals("Preview")) {
+
+            try {
+                Runtime.getRuntime().exec("./src/main/resources/treesitter.sh " + path + " temp.html");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            PreviewPane preview = new PreviewPane("temp.html");
+            try {
+                Runtime.getRuntime().exec("./src/main/resources/deleteTemp.sh");
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }
+
 
         if (d.equals("Exit")) {
             System.exit(0);
@@ -304,38 +312,38 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 path = file.getAbsolutePath();
                 System.out.println(path);
                 name = file.getName();
-                Scanner fileIn;
-
-                try {
-                    fileIn = new Scanner(file);
-                    if (file.isFile()) {
-                        while (fileIn.hasNextLine()) {
-                            String line = fileIn.nextLine() + "\n";
-                            textPane.append(line);
-                        }
-                    }
-
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                }
+                open(file);
 
             }
 
-            getProjDir();
+            progDir = path.replaceAll("\\\\", "/");
+
+            int ij = progDir.lastIndexOf("/");
+            progDir = progDir.substring(0, ij);
+
+
+            int index = name.lastIndexOf('.');
+            if (index > 0) {
+                extension = name.substring(index + 1);
+            }
         }
 
     }
 
-    private void getProjDir() {
-        progDir = path.replaceAll("\\\\", "/");
+    private void open(File file) {
+        System.out.println("in Open");
+        Scanner fileIn;
+        try {
+            fileIn = new Scanner(file);
+            if (file.isFile()) {
+                while (fileIn.hasNextLine()) {
+                    String line = fileIn.nextLine() + "\n";
+                    textPane.append(line);
+                }
+            }
 
-        int ij = progDir.lastIndexOf("/");
-        progDir = progDir.substring(0, ij);
-
-
-        int index = name.lastIndexOf('.');
-        if (index > 0) {
-            extension = name.substring(index + 1);
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
         }
     }
 }

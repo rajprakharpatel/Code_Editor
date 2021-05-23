@@ -2,7 +2,6 @@
 package editorGui;
 
 import javax.swing.*;
-import javax.swing.text.Style;
 import java.awt.*;
 
 public class TextPane extends JTextArea {
@@ -15,11 +14,6 @@ public class TextPane extends JTextArea {
         this.setFont(new Font(this.getFont().getFamily(), Font.PLAIN,24));
         this.setCaretColor(Color.WHITE);
 
-
-
         this.setSelectedTextColor(Color.BLUE);
-
-
     }
-
 }

@@ -5,13 +5,10 @@ import java.io.*;
 public class LangFormatter {
     private final String fileType;
     private final String OSName;
-    private final String path;
 
-    public LangFormatter(String ft, String Osn, String path) {
+    public LangFormatter(String ft, String Osn) {
         fileType = ft;
         OSName = Osn;
-        this.path = path;
-
     }
 
     public void format(String fileName) {
@@ -36,31 +33,30 @@ public class LangFormatter {
             if (OSName.equals("Linux")) {
                 final Process p = Runtime.getRuntime().exec("./libs/clang-format-10_linux-amd64 -i " + fileName);
             } else {
-                System.out.println("./libs/clang-format-10_windows-amd64.exe -i " + path);
-                Runtime.getRuntime().exec("./libs/clang-format-10_windows-amd64.exe -i " + path);
-                System.out.println("reached");
+                final Process p = Runtime.getRuntime().exec("./libs/clang-format-10_windows-amd64.exe -i " + fileName);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-   public void googleJavaFormat(String fileName) {
-       try {
-           if (OSName.equals("Linux")) {
-               final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
-           } else {
-
-               final Process p = Runtime.getRuntime().exec("cmd /c .\\src\\main\\resources\\jScript.bat " + fileName);
-           }
-       } catch (IOException e) {
-           e.printStackTrace();
-       }
-   }
+    public void googleJavaFormat(String fileName) {
+        try {
+            if (OSName.equals("Linux")) {
+                System.out.println("./src/main/resources/gjformat.sh " + fileName);
+                final Process p = Runtime.getRuntime().exec("./src/main/resources/gjformat.sh " + fileName);
+//                final Process r = Runtime.getRuntime().exec("alacritty --hold -e java -version");
+//                final Process p = Runtime.getRuntime().exec("java -jar /libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
+            } else {
+                final Process p = Runtime.getRuntime().exec("cmd /c .\\src\\main\\resources\\jScript.bat " + fileName);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void yapfFormat(String fileName) {
         // System.out.println("yapfFormat");
-
         try {
             if(OSName.equals("Linux")) {
                 final Process p = Runtime.getRuntime().exec("./src/main/resources/yapf.sh " + fileName);
@@ -72,6 +68,5 @@ public class LangFormatter {
         } catch(Exception e){
             e.printStackTrace();
         }
-
     }
 }
