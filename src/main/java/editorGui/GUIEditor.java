@@ -2,12 +2,10 @@ package editorGui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.event.*;
 
-@SuppressWarnings("serial")
-public class GUIEditor extends JFrame implements ActionListener {
+
+public class GUIEditor extends JFrame {
 
     TextPane textPane;
     JScrollPane scrollPane;
@@ -23,7 +21,7 @@ public class GUIEditor extends JFrame implements ActionListener {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
         } catch (Exception e) {
             try {
-                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                UIManager.setLookAndFeel("javax.swing.plaf.motif.MotifLookAndFeel");
             } catch (Exception ev) {
                 // e.printStackTrace();
                 System.err.println("Look and feel not set.");
@@ -35,7 +33,7 @@ public class GUIEditor extends JFrame implements ActionListener {
         if (!OSName.equals("Linux")) {
             this.getContentPane().setBackground(Color.DARK_GRAY);
         }
-        this.setSize(500, 500);
+        this.setSize(750, 750);
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
 
@@ -50,6 +48,7 @@ public class GUIEditor extends JFrame implements ActionListener {
         scrollPane = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(500, 500));
+
 
         // Setting up menu bar
         menuBar = new MenuBar(textPane, OSName);
@@ -70,10 +69,6 @@ public class GUIEditor extends JFrame implements ActionListener {
         this.setVisible(true);
 
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-
-    }
 }
+
+

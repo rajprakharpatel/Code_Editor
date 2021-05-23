@@ -17,13 +17,11 @@ public class LangFormatter {
     public void format(String fileName) {
         switch (fileType) {
             case "c":
-                clangFormat(fileName);
-                break;
             case "cpp":
                 clangFormat(fileName);
                 break;
             case "java":
-                //googleJavaFormat(fileName);
+                googleJavaFormat(fileName);
                 break;
             case "py":
                 yapfFormat(fileName);
@@ -52,7 +50,8 @@ public class LangFormatter {
            if (OSName.equals("Linux")) {
                final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
            } else {
-               final Process p = Runtime.getRuntime().exec("java -jar ./libs/google-java-format-1.10.0-all-deps.jar --replace " + fileName);
+
+               final Process p = Runtime.getRuntime().exec("cmd /c .\\src\\main\\resources\\jScript.bat " + fileName);
            }
        } catch (IOException e) {
            e.printStackTrace();
@@ -61,10 +60,18 @@ public class LangFormatter {
 
     public void yapfFormat(String fileName) {
         // System.out.println("yapfFormat");
+
         try {
-            final Process p = Runtime.getRuntime().exec("./src/main/resources/yapf.sh " + fileName);
+            if(OSName.equals("Linux")) {
+                final Process p = Runtime.getRuntime().exec("./src/main/resources/yapf.sh " + fileName);
+            }
+            else{
+                System.out.println(".\\src\\main\\resources\\yapf.bat" + fileName);
+                final Process p = Runtime.getRuntime().exec(".\\src\\main\\resources\\yapf.bat " + fileName);
+            }
         } catch(Exception e){
             e.printStackTrace();
         }
+
     }
 }

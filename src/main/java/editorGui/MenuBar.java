@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,7 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-@SuppressWarnings("serial")
+
 public class MenuBar extends JMenuBar implements ActionListener {
 
     private final TextPane textPane;
@@ -41,13 +43,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenuItem saveAsItem = new JMenuItem("Save as");
         JMenuItem exitItem = new JMenuItem("Exit");
 
-        JMenuItem cutItem = new JMenuItem("Cut");
-        JMenuItem copyItem = new JMenuItem("Copy");
-        JMenuItem pasteItem = new JMenuItem("Paste");
-        JMenuItem findItem = new JMenuItem("Find");
+        JMenuItem cutItem = new JMenuItem("Cut File");
+        JMenuItem copyItem = new JMenuItem("Copy File");
         JMenuItem runItem = new JMenuItem("Run");
-        JMenuItem stopItem = new JMenuItem("Stop");
         JMenuItem newTerminal = new JMenuItem("New Terminal");
+        JMenuItem reload = new JMenuItem("Reload");
 
 
         JMenuItem reformat = new JMenuItem("Reformat");
@@ -69,9 +69,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
         runItem.addActionListener(this);
         exitItem.addActionListener(this);
         openItem.addActionListener(this);
-        stopItem.addActionListener(this);
         newTerminal.addActionListener(this);
         reformat.addActionListener(this);
+        reload.addActionListener(this);
+        copyItem.addActionListener(this);
+        cutItem.addActionListener(this);
 
 
         this.add(fileMenu);
@@ -84,18 +86,20 @@ public class MenuBar extends JMenuBar implements ActionListener {
         fileMenu.add(newItem);
         fileMenu.add(saveItem);
         fileMenu.add(saveAsItem);
+        fileMenu.add(reload);
         fileMenu.add(exitItem);
+
 
         editMenu.add(fontSize);
         editMenu.add(cutItem);
         editMenu.add(copyItem);
-        editMenu.add(pasteItem);
-        editMenu.add(findItem);
+
+
         editMenu.add(reformat);
 
 
         buildMenu.add(runItem);
-        buildMenu.add(stopItem);
+
 
         terminal.add(newTerminal);
     }
@@ -164,7 +168,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                         if (OSName.equals("Linux")) {
                             Runtime.getRuntime().exec("alacritty --hold -e ./src/main/resources/jlinux.sh " + progDir + " " + name.substring(0, index) + " 5");
                         } else {
-                            Runtime.getRuntime().exec("cmd /c start ./src/main/resources/script.bat " + progDir + " " + name.substring(0, index));
+                            Runtime.getRuntime().exec("cmd /c start  .\\src\\main\\resources\\script.bat " + progDir + " " + name.substring(0, index));
                             System.out.println("Compiled");
                         }
                     } catch (IOException ioException) {
@@ -226,6 +230,40 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
             LangFormatter langFormatter = new LangFormatter(extension, OSName, path);
             langFormatter.format(path);
+
+        }
+        if (d.equals("Reload")){
+            getProjDir();
+            File file = new File(path);
+            textPane.setText("");
+            Scanner fileIn;
+
+            try {
+                fileIn = new Scanner(file);
+                if (file.isFile()) {
+                    while (fileIn.hasNextLine()) {
+                        String line = fileIn.nextLine() + "\n";
+                        textPane.append(line);
+                    }
+                }
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                fileNotFoundException.printStackTrace();
+            }
+        }
+        if(d.equals("Copy File")){
+            String textCopied = textPane.getText();
+            StringSelection stringSelection = new StringSelection(textCopied);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+
+        }
+        if(d.equals("Cut File")){
+            textPane.setText("");
+            String textCopied = textPane.getText();
+            StringSelection stringSelection = new StringSelection(textCopied);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
 
         }
 

@@ -16,6 +16,7 @@ public class TextPane extends JTextArea {
         this.setCaretColor(Color.WHITE);
 
 
+
         this.setSelectedTextColor(Color.BLUE);
 
 
